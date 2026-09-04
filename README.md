@@ -18,6 +18,7 @@ Input Image → Face Detect+Encode → Reverse Image Search → Blockchain Recor
 
 **Network:** Polygon Amoy testnet (EVM-compatible, free, fast)  
 **Explorer:** [amoy.polygonscan.com](https://amoy.polygonscan.com)  
+**RPC:** `polygon-amoy-bor-rpc.publicnode.com` (public, no key needed)  
 **Contract:** `FaceMatchRegistry` — stores structured records and emits `MatchRecorded` events.
 
 ## Setup
@@ -107,6 +108,7 @@ face_match/
 
 - **Image matching, not person matching** — The reverse-image search matches the exact image, not the same person across different photos. If the input photo isn't published online, no social match is found.
 - **SerpAPI free tier** — ~100 searches/month. Local images are uploaded to temporary hosts (catbox.moe, 0x0.st, tmpfiles.org) which may rate-limit. Use `--image-url` to bypass.
+- **RPC availability** — The default Polygon public RPC (`rpc-amoy.polygon.technology`) can be unreliable. The project uses `polygon-amoy-bor-rpc.publicnode.com` as a fallback.
 - **Testnet only** — Polygon Amoy test tokens have no real value. This is a proof-of-concept, not production infrastructure.
 - **Demo-grade recognition** — SFace is a lightweight recognizer; it is not production biometric security.
 - **Single face** — Picks the highest-confidence face; minimal multi-face handling.
@@ -114,3 +116,11 @@ face_match/
 ## Ethics
 
 **Only process images you are authorized to use.** This tool is a hackathon demonstration. Misuse for surveillance, stalking, or unauthorized identification is unethical and may be illegal.
+
+## Tested Successfully
+
+End-to-end pipeline verified on Sep 4, 2026:
+- Face detected (score 0.909) and 128-d embedding computed
+- Reverse image search found a Reddit post (social domain: `reddit.com`)
+- Record written to Polygon Amoy: [tx](https://amoy.polygonscan.com/tx/6ddb896cbc9654b6eebc355e3093f1132b9dce565712fadcd225eed83b2c77b1)
+- On-chain hashes match locally recomputed hashes — tamper-evidence verified
