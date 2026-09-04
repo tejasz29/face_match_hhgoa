@@ -1,0 +1,15 @@
+# Secrets & generated artifacts
+.env
+output/
+models/
+deployment.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Sample/demo images — provide your own at runtime (see samples/README.md)
+samples/*
+!samples/README.md
