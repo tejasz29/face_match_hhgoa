@@ -60,7 +60,7 @@ SOCIAL_DOMAINS = [
 ]
 
 # --- Blockchain: Polygon Amoy testnet ---------------------------------------
-RPC_URL = os.getenv("RPC_URL", "https://rpc-amoy.polygon.technology")
+RPC_URL = os.getenv("RPC_URL", "https://polygon-amoy-bor-rpc.publicnode.com")
 CHAIN_ID = int(os.getenv("CHAIN_ID", "80002"))
 PRIVATE_KEY = os.getenv("PRIVATE_KEY", "")
 CONTRACT_ADDRESS = os.getenv("CONTRACT_ADDRESS", "")
