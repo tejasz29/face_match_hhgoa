@@ -73,31 +73,26 @@ def main() -> None:
     ui.blank()
 
     # ── Stage 2: Reverse image search ──────────────────────────────────
-    print("=" * 60)
-    print("  STAGE 2: Reverse Image Search (SerpAPI Google Lens)")
-    print("=" * 60)
-
-    # Get a public URL for the image
+    ui.step(2, 4, "Search the web for this photo")
     if args.image_url:
         public_url = args.image_url
     else:
         public_url = host_image(source_label, raw_bytes=raw_bytes)
-    print(f"  Public URL: {public_url}")
 
     search_result = search(public_url)
     if search_result is None:
-        print("  No matches found. Recording hash-only record on-chain.")
+        ui.warn("No matching post found online - recording the fingerprints only.")
         match_url = public_url
         match_source = "no_match"
     else:
-        print(f"  Title:      {search_result.title}")
-        print(f"  URL:        {search_result.url}")
-        print(f"  Source:     {search_result.source}")
-        print(f"  Domain:     {search_result.domain}")
-        print(f"  Is social:  {search_result.is_social}")
+        ui.ok(f"Found a matching post on {search_result.source}")
+        ui.info(f"  Title : {search_result.title}")
+        ui.info(f"  URL   : {search_result.url}")
+        if search_result.is_social:
+            ui.ok(f"Social media confirmed ({search_result.domain})")
         match_url = search_result.url
         match_source = search_result.source
-    print()
+    ui.blank()
 
     # ── Stage 3: Blockchain record ─────────────────────────────────────
     print("=" * 60)
