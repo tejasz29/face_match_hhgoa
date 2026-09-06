@@ -174,15 +174,23 @@ def verify_record(
     img_ok = rec.image_hash == expected_image_sha256
     emb_ok = rec.embedding_hash == expected_embedding_sha256
 
-    print(f"[verify] Record #{rec.record_id}:")
-    print(f"  image_hash:     {rec.image_hash}")
-    print(f"  expected:       {expected_image_sha256}")
-    print(f"  image match:    {'YES' if img_ok else 'NO — MISMATCH!'}")
-    print(f"  embedding_hash: {rec.embedding_hash}")
-    print(f"  expected:       {expected_embedding_sha256}")
-    print(f"  embedding match:{'YES' if emb_ok else 'NO — MISMATCH!'}")
-    print(f"  match_url:      {rec.match_url}")
-    print(f"  timestamp:      {rec.timestamp}")
-    print(f"  reporter:       {rec.reporter}")
+    ui.info(f"Retrieved record #{rec.record_id} from the chain")
+    if img_ok:
+        ui.ok("Image fingerprint matches the on-chain record")
+    else:
+        ui.warn("Image fingerprint DOES NOT match the on-chain record!")
+    if emb_ok:
+        ui.ok("Face fingerprint matches the on-chain record")
+    else:
+        ui.warn("Face fingerprint DOES NOT match the on-chain record!")
+
+    if ui.VERBOSE:
+        ui.info(f"on-chain image hash: {rec.image_hash}")
+        ui.info(f"expected image hash: {expected_image_sha256}")
+        ui.info(f"on-chain face  hash: {rec.embedding_hash}")
+        ui.info(f"expected face  hash: {expected_embedding_sha256}")
+    ui.info(f"Match URL   : {rec.match_url}")
+    ui.info(f"Timestamp   : {rec.timestamp}")
+    ui.info(f"Reported by : {rec.reporter}")
 
     return img_ok and emb_ok
