@@ -8,7 +8,13 @@ from __future__ import annotations
 BAR = "─" * 88
 WIDE_BAR = "═" * 88
 
+VERBOSE = False
 _warnings = 0
+
+
+def set_verbose(flag: bool) -> None:
+    global VERBOSE
+    VERBOSE = bool(flag)
 
 
 def header(title: str) -> None:
@@ -41,6 +47,22 @@ def warn(msg: str) -> None:
     global _warnings
     _warnings += 1
     print(f"  \u26a0 {msg}")
+
+
+def short(value: str, head: int = 12, tail: int = 4) -> str:
+    """Truncate a long hash/url for readable lines."""
+    if len(value) <= head + tail + 1:
+        return value
+    return f"{value[:head]}\u2026{value[-tail:]}"
+
+
+def hashes_block(
+    image_sha256: str,
+    embedding_sha256: str,
+) -> None:
+    """Show image + face fingerprints (short, or full in verbose)."""
+    ok(f"Image fingerprint (SHA-256): {image_sha256 if VERBOSE else short(image_sha256)}")
+    ok(f"Face  fingerprint (SHA-256): {embedding_sha256 if VERBOSE else short(embedding_sha256)}")
 
 
 def divider(text: str | None = None) -> None:
