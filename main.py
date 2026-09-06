@@ -95,17 +95,15 @@ def main() -> None:
     ui.blank()
 
     # ── Stage 3: Blockchain record ─────────────────────────────────────
-    print("=" * 60)
-    print("  STAGE 3: Record on Polygon Amoy Testnet")
-    print("=" * 60)
-
+    ui.step(3, 4, "Write the record to a blockchain")
+    ui.info("Network: Polygon Amoy testnet")
     tx_hash, record_id = record_match(
         image_sha256=result.image_sha256,
         embedding_sha256=result.embedding_sha256,
         match_url=match_url,
         match_source=match_source,
     )
-    print()
+    ui.blank()
 
     # ── Stage 4: Verify ────────────────────────────────────────────────
     print("=" * 60)
