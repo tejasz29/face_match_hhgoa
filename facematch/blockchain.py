@@ -11,7 +11,7 @@ from typing import Optional
 from web3 import Web3
 from web3._utils.events import EventLogErrorFlags
 
-from facematch import config
+from facematch import config, ui
 
 # Minimal ABI — just what we need for recordMatch + getRecord
 _CONTRACT_ABI = [
@@ -108,7 +108,7 @@ def record_match(
     image_hash = bytes.fromhex(image_sha256)
     embedding_hash = bytes.fromhex(embedding_sha256)
 
-    print(f"[chain] Sending recordMatch tx from {account.address} ...")
+    ui.bullet(f"Sending transaction from {account.address} ...")
     tx = contract.functions.recordMatch(
         image_hash,
         embedding_hash,
@@ -124,11 +124,11 @@ def record_match(
 
     signed = w3.eth.account.sign_transaction(tx, config.PRIVATE_KEY)
     tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)
-    print(f"[chain] TX sent: {tx_hash.hex()}")
-    print(f"[chain] Explorer: {config.explorer_tx(tx_hash.hex())}")
+    ui.info(f"Transaction hash : {ui.short(tx_hash.hex())}")
+    ui.info(f"Explorer link    : {config.explorer_tx(tx_hash.hex())}")
 
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
-    print(f"[chain] TX confirmed in block {receipt.blockNumber}")
+    ui.ok(f"Confirmed on-chain in block {receipt.blockNumber}")
 
     # Extract record id from event logs.
     # Ignore unrelated logs emitted alongside ours (e.g. ERC-20 transfers) so
@@ -137,7 +137,7 @@ def record_match(
         receipt, errors=EventLogErrorFlags.Ignore
     )
     record_id = events[0]["args"]["id"]
-    print(f"[chain] Record ID: {record_id}")
+    ui.ok(f"Record written on-chain  (record ID: {record_id})")
 
     return tx_hash.hex(), record_id
 
