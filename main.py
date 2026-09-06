@@ -106,21 +106,19 @@ def main() -> None:
     ui.blank()
 
     # ── Stage 4: Verify ────────────────────────────────────────────────
-    print("=" * 60)
-    print("  STAGE 4: Verify Tamper-Evidence")
-    print("=" * 60)
-
+    ui.step(4, 4, "Verify the record against the blockchain")
     ok = verify_record(
         record_id,
         expected_image_sha256=result.image_sha256,
         expected_embedding_sha256=result.embedding_sha256,
     )
-    print()
+    ui.blank()
     if ok:
-        print("  *** Record matches — tamper-evident verified ***")
+        ui.ok("Record verified - on-chain data exactly matches this image. "
+              "Tamper-evident.")
     else:
-        print("  *** WARNING: record mismatch — possible tampering! ***")
-    print()
+        ui.warn("MISMATCH detected - the on-chain record does not match!")
+    ui.blank()
 
     # ── Save result JSON ───────────────────────────────────────────────
     output = {
