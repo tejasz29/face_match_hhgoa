@@ -6,7 +6,7 @@ Usage:
 
 Pipeline stages:
     1. Detect + encode face (OpenCV YuNet + SFace)
-    2. Reverse-image search via SerpAPI Google Lens
+    2. Reverse-image search (SerpAPI Google Lens)
     3. Record match on Polygon Amoy testnet
     4. Read back and verify tamper-evidence
 """
@@ -15,12 +15,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-import time
-from pathlib import Path
 
+from facematch import ui
 from facematch.config import OUTPUT_DIR
 from facematch.face_encoder import FaceEncoder, load_image_bgr
-from facematch.image_host import host_image, is_url
+from facematch.image_host import host_image
 from facematch.reverse_search import search
 from facematch.blockchain import record_match, verify_record
 
@@ -37,12 +36,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # ── Stage 1: Face detection + encoding ──────────────────────────────
-    print("=" * 60)
-    print("  STAGE 1: Face Detection + Encoding")
-    print("=" * 60)
+    ui.header("FACE MATCH  \u00b7  BLOCKCHAIN VERIFICATION")
 
     if args.image_url:
         import requests
@@ -54,6 +52,14 @@ def main() -> None:
     else:
         img, raw_bytes = load_image_bgr(source=args.image)
         source_label = args.image
+
+    ui.info(f"Input image : {source_label}")
+    ui.blank()
+
+    # ── Stage 1: Face detection + encoding ──────────────────────────────
+    print("=" * 60)
+    print("  STAGE 1: Face Detection + Encoding")
+    print("=" * 60)
 
     encoder = FaceEncoder()
     result = encoder.encode(img, raw_bytes)
