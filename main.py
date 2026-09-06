@@ -3,6 +3,7 @@
 Usage:
     python main.py --image <path>
     python main.py --image-url <public_url>
+    python main.py --image <path> --verbose
 
 Pipeline stages:
     1. Detect + encode face (OpenCV YuNet + SFace)
@@ -31,6 +32,11 @@ def parse_args() -> argparse.Namespace:
     group = p.add_mutually_exclusive_group(required=True)
     group.add_argument("--image", type=str, help="Path to a local image file")
     group.add_argument("--image-url", type=str, help="Public URL of an image")
+    p.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print full technical detail (complete hashes, raw values)",
+    )
     return p.parse_args()
 
 
@@ -38,6 +44,7 @@ def main() -> None:
     args = parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+    ui.set_verbose(args.verbose)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     ui.header("FACE MATCH  \u00b7  BLOCKCHAIN VERIFICATION")
@@ -67,6 +74,10 @@ def main() -> None:
     cv2.imwrite(str(crop_path), result.aligned_crop)
 
     ui.ok(f"Found {result.num_faces} face  \u00b7  confidence {result.score:.1%}")
+    if args.verbose:
+        ui.info(f"Raw confidence: {result.score}")
+        ui.info(f"Bounding box: x={result.bbox[0]} y={result.bbox[1]} "
+                f"w={result.bbox[2]} h={result.bbox[3]}")
     ui.ok("Created a unique face signature (128-d embedding)")
     ui.hashes_block(result.image_sha256, result.embedding_sha256)
     ui.ok(f"Saved the aligned face crop: {crop_path}")
