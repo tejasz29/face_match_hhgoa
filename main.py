@@ -159,10 +159,12 @@ def main() -> None:
 
     result_path = OUTPUT_DIR / "result.json"
     result_path.write_text(json.dumps(output, indent=2) + "\n")
-    print(f"Full result saved to: {result_path}")
-    print("=" * 60)
-    print("  Pipeline complete.")
-    print("=" * 60)
+
+    ui.header("DONE")
+    ui.info(f"Face matched and recorded on-chain  \u00b7  verified: {'YES' if ok else 'NO'}")
+    ui.info(f"Full result saved to: {result_path}")
+    ui.info(f"Explorer: https://amoy.polygonscan.com/tx/{tx_hash}")
+    ui.blank()
 
 
 if __name__ == "__main__":
