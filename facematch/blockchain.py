@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from web3 import Web3
+from web3._utils.events import EventLogErrorFlags
 
 from facematch import config
 
