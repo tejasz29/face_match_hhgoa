@@ -56,11 +56,8 @@ def main() -> None:
     ui.info(f"Input image : {source_label}")
     ui.blank()
 
-    # ── Stage 1: Face detection + encoding ──────────────────────────────
-    print("=" * 60)
-    print("  STAGE 1: Face Detection + Encoding")
-    print("=" * 60)
-
+    # ── Stage 1: Face detection + encoding ─────────────────────────────
+    ui.step(1, 4, "Detect the face")
     encoder = FaceEncoder()
     result = encoder.encode(img, raw_bytes)
 
@@ -69,13 +66,11 @@ def main() -> None:
     crop_path = OUTPUT_DIR / "face_crop.png"
     cv2.imwrite(str(crop_path), result.aligned_crop)
 
-    print(f"  Source:       {source_label}")
-    print(f"  Faces found:  {result.num_faces}")
-    print(f"  Best bbox:    {result.bbox}  (score={result.score:.4f})")
-    print(f"  image_sha256: {result.image_sha256}")
-    print(f"  embedding_sha256: {result.embedding_sha256}")
-    print(f"  Aligned crop saved to: {crop_path}")
-    print()
+    ui.ok(f"Found {result.num_faces} face  \u00b7  confidence {result.score:.1%}")
+    ui.ok("Created a unique face signature (128-d embedding)")
+    ui.hashes_block(result.image_sha256, result.embedding_sha256)
+    ui.ok(f"Saved the aligned face crop: {crop_path}")
+    ui.blank()
 
     # ── Stage 2: Reverse image search ──────────────────────────────────
     print("=" * 60)
