@@ -130,7 +130,9 @@ def record_match(
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
     print(f"[chain] TX confirmed in block {receipt.blockNumber}")
 
-    # Extract record id from event logs
+    # Extract record id from event logs.
+    # Ignore unrelated logs emitted alongside ours (e.g. ERC-20 transfers) so
+    # web3 doesn't warn with MismatchedABI when decoding them against our ABI.
     events = contract.events.MatchRecorded().process_receipt(receipt)
     record_id = events[0]["args"]["id"]
     print(f"[chain] Record ID: {record_id}")
