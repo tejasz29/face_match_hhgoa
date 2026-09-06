@@ -61,6 +61,9 @@ class FaceEncoder:
     """Loads the ONNX models once, then encodes faces on demand."""
 
     def __init__(self) -> None:
+        from cv2.utils import logging as cv2_logging
+        cv2_logging.setLogLevel(cv2_logging.LOG_LEVEL_ERROR)
+
         yunet_path, sface_path = ensure_models()
         self.detector = cv2.FaceDetectorYN.create(
             str(yunet_path),
