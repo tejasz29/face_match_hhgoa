@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from facematch import config
+from facematch import config, ui
 
 
 @dataclass
@@ -61,17 +61,17 @@ def search(
         "api_key": key,
     }
 
-    print(f"[search] Querying SerpAPI Google Lens ...")
+    ui.bullet("Searching the web (Google Lens) ...")
     resp = requests.get(config.SERPAPI_ENDPOINT, params=params, timeout=30)
     resp.raise_for_status()
     data = resp.json()
 
     visual_matches = data.get("visual_matches", [])
     if not visual_matches:
-        print("[search] No visual matches found.")
+        ui.bullet("No visual matches found.")
         return None
 
-    print(f"[search] Got {len(visual_matches)} visual match(es).")
+    ui.bullet(f"Found {len(visual_matches)} matching images on the web")
 
     # --- Pass 1: find the first social-media match ---
     for match in visual_matches:
