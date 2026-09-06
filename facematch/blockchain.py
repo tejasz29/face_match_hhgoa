@@ -133,7 +133,9 @@ def record_match(
     # Extract record id from event logs.
     # Ignore unrelated logs emitted alongside ours (e.g. ERC-20 transfers) so
     # web3 doesn't warn with MismatchedABI when decoding them against our ABI.
-    events = contract.events.MatchRecorded().process_receipt(receipt)
+    events = contract.events.MatchRecorded().process_receipt(
+        receipt, errors=EventLogErrorFlags.Ignore
+    )
     record_id = events[0]["args"]["id"]
     print(f"[chain] Record ID: {record_id}")
 
