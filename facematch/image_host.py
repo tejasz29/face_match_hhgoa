@@ -19,6 +19,8 @@ from urllib.parse import urlparse
 
 import requests
 
+from facematch import ui
+
 # ---------------------------------------------------------------------------
 # Host backends
 # ---------------------------------------------------------------------------
@@ -115,10 +117,10 @@ def host_image(
     filename = path.name
 
     for host_name, uploader in UPLOAD_CHAIN:
-        print(f"[host] Trying {host_name}...")
+        ui.bullet(f"Uploading image to a public host ({host_name}) ...")
         public_url = uploader(data, filename, content_type)
         if public_url:
-            print(f"[host] Uploaded to {host_name}: {public_url}")
+            ui.ok(f"Image is now live at: {public_url}")
             return public_url
 
     raise RuntimeError(
